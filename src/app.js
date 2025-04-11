@@ -45,9 +45,9 @@ app.use(express.json());
 // Routes
 app.use('/api/v1', routes);
 
-app.all(/(.*)/, (req, _res, next) => {
-  next(new AppError(`Can't find ${req.originalUrl} on this server`, 404));
-});
+// app.all(/(.*)/, (req, _res, next) => {
+//   next(new AppError(`Can't find ${req.originalUrl} on this server`, 404));
+// });
 
 app.use(globalErrorHandler);
 

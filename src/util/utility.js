@@ -1,3 +1,36 @@
+import joi from "joi";
+import jwt from "jsonwebtoken";
+import { AppError } from "./appError.js";
+
+const JWT_SECRET = process.env.JWT_SECRET;
+
+export const makeToken = (user, lifespan = "1d") =>
+  jwt.sign({ user }, JWT_SECRET, {
+    expiresIn: lifespan,
+  });
+
+export const generateTokens = (user) => {
+  const accessToken = makeToken(user);
+  const refreshToken = makeToken(user, "30d");
+  return { accessToken, refreshToken };
+};
+
+export const verifyToken = (accessToken, checkExpiry = true) => {
+  // @ts-ignore
+  const { exp, user } = jwt.verify(accessToken, JWT_SECRET);
+
+  if (checkExpiry) {
+    // convert exp to milliseconds by multiplying by 1000
+    if (+new Date() > exp * 1000) {
+      throw new AppError("token expired! Please re-login", 401);
+    }
+  }
+  return user;
+};
+
+export const includesSome = (arr, values) =>
+  values.some((v) => arr.includes(v));
+
 export const buildResponse = (
   response,
   statusCode,

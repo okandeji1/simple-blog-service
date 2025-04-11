@@ -9,5 +9,6 @@
     "typescript",
     "typescriptreact"
   ],
-  "tslint.enable": false
+  "tslint.enable": false,
+  "editor.wordWrap": "on"
 }
